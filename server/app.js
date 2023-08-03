@@ -15,7 +15,7 @@ app.use(express.json());
 // we link the router files to make our route easy 
 app.use(require('./router/auth'));
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 
 app.get('/signup', (req, res) => {
     res.send(`Hello Registration world from the server`);
