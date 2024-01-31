@@ -12,7 +12,7 @@ const Logout = () => {
         fetch('/logout', {
             method: "GET",
             headers: {
-                Accept: "appllication/json",
+                Accept: "application/json",
                 "Content-Type": "application/json"
             },
             credentials: "include"

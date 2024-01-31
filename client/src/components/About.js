@@ -12,15 +12,17 @@ const About = () => {
     const callAboutPage = async () => {
         try {
             const res = await fetch('/about', {
+
+                
                 method: "GET",
                 headers: {
-                    Accept: "appllication/json",
+                    Accept: "application/json",
                     "Content-Type": "application/json"
                 },
                 credentials: "include"
             });
 
-            const data = await res.json();
+            const data = await res.json(); 
             console.log(data);
             setUserData(data);
 
@@ -176,12 +178,10 @@ const About = () => {
                                                 <p>6 months</p>
                                             </div>
                                         </div>
-                              
                             </div>
                         </div>
                     </div>
                     </div>
-
                 </form>
            </div>
         </>

@@ -3,7 +3,6 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const authenticate = require("../middleware/authenticate");
 
-
 require('../db/conn');
 const User = require("../model/userSchema");
 
@@ -11,15 +10,14 @@ router.get('/', (req, res) => {
     res.send(`Hello world from the server rotuer js`);
 });
 
-
 router.post('/register', async (req, res) => {
 
     const { name, email, phone, work, password, cpassword} = req.body;
     
     if (!name || !email || !phone || !work || !password || !cpassword) {
-        return res.status(422).json({ error: "Plz filled the field properly" });
+        return res.status(422).json({ error: "Plz fill the field properly" });
     }
-
+    
     try {
         const userExist = await User.findOne({ email: email });
         if (userExist) {
@@ -27,8 +25,7 @@ router.post('/register', async (req, res) => {
         } else if (password != cpassword) {
              return res.status(422).json({ error: "password are not matching" });
         } else {
-             const user = new User({ name, email, phone, work, password, cpassword });
-            // yeha pe 
+            const user = new User({ name, email, phone, work, password, cpassword });
             await user.save();
             res.status(201).json({ message: "user registered successfuly" });
         }
@@ -38,12 +35,11 @@ router.post('/register', async (req, res) => {
 });
 
 // login route 
-
 router.post('/signin', async (req, res) => {
     try {
         let token;
         const { email, password } = req.body;
-
+        //destructuring to access data using req object
         if (!email || !password) {
             return res.status(400).json({error:"Plz Filled the data"})
         }
@@ -57,12 +53,12 @@ router.post('/signin', async (req, res) => {
         } else {
              // need to genereate the token and stored cookie after the password match 
             token = await userLogin.generateAuthToken();
-            // console.log(token);
+            console.log(token);
 
-            res.cookie("jwtoken", token, {
-                expires: new Date(Date.now() + 25892000000),
+            res.cookie("jwtoken", token, {  //token storing as cookies
+                expires: new Date(Date.now() + 60000),
                 httpOnly:true
-            });
+            });              
             
             res.json({ message: "user Signin Successfully" });
         }
@@ -75,9 +71,6 @@ router.post('/signin', async (req, res) => {
     }
 });
 
-
-// about us ka page 
-
 router.get('/about', authenticate ,(req, res) => {
     // console.log(`Hello my About`);
     res.send(req.rootUser);
@@ -85,7 +78,7 @@ router.get('/about', authenticate ,(req, res) => {
 
 // get user data for contact us and home page 
 router.get('/getdata', authenticate, (req, res) => {
-    // console.log(`Hello my About`);
+    console.log(`Hello my About`);
     res.send(req.rootUser);
 });
 
@@ -102,31 +95,22 @@ router.post('/contact', authenticate, async (req, res) => {
         }
 
         const userContact = await User.findOne({ _id: req.userID });
-
-        if (userContact) {
-            
-            const userMessage = await userContact.addMessage(name, email, phone, message);
-
+        if (userContact) {    
+           // const userMessage = await userContact.addMessage(name, email, phone, message);
             await userContact.save();
-
             res.status(201).json({ message: "user Contact successfully" });
-
         }
-        
     } catch (error) {
         console.log(error);
     }
-
 });
 
-
-// Logout  ka page 
+// Logout page
 router.get('/logout', (req, res) => {
-    // console.log(`Hello my Logout Page`);
+    // console.log(`Logout Page`);
     res.clearCookie('jwtoken', { path: '/' });
-    res.status(200).send('User lOgout');
+    res.status(200).send('User logout');
 });
-
 
 module.exports = router;
 

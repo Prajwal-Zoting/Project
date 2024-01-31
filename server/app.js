@@ -3,6 +3,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 
 const app = express();
+
 app.use(cookieParser());
 
 dotenv.config({ path: './config.env' });
@@ -15,7 +16,7 @@ app.use(express.json());
 // we link the router files to make our route easy 
 app.use(require('./router/auth'));
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 
 app.get('/signup', (req, res) => {
     res.send(`Hello Registration world from the server`);
